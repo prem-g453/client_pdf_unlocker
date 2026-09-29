@@ -1,0 +1,26 @@
+# Caddy Reverse Proxy Configuration with Automatic HTTPS
+
+unlocker.internal.company.com {
+    # Automatic TLS with Let's Encrypt / internal CA
+    # tls internal # Uncomment for local internal CA
+
+    # Request limits
+    request_body {
+        max_size 250MB
+    }
+
+    # Security Headers
+    header {
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    # Reverse proxy to FastAPI application
+    reverse_proxy 127.0.0.1:8000 {
+        # SSE Streaming settings
+        flush_interval -1
+    }
+}
